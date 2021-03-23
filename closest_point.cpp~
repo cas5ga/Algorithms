@@ -1,0 +1,84 @@
+//Caleb A. Street
+//Algorithms
+//February 19, 2021
+//This program implements the closest point problem algorithm
+
+#include <iostream>
+#include "point.h"
+#include <cstdlib>
+#include <math.h>
+#include <time.h>
+
+using namespace std;
+
+//I still need to work on this function to make it better
+int randomNumber(){
+  clock_t time = clock();
+  srand(time);
+  int randNumber = (rand() % 201) - 100;
+  return randNumber;
+}
+
+void createPoints(Point *pointArray, int size){
+  for(int i = 0; i < size; i++){
+    int x = randomNumber(); 
+    int y = randomNumber();
+    pointArray[i].setX(x);
+    pointArray[i].setY(y);
+  }
+}
+
+void calculateDistances(Point *pointArray, int size, float *tempArray){
+  float distance = 0;
+  float minDistance = 1000;
+  int pointOnePosition = 0;
+  int pointTwoPosition = 0;
+  for(int i = 0; i < size; i++){
+    for(int j = 0; j < size; j++){
+      if(i < j){
+        distance = sqrt(pow((pointArray[i].getX() - pointArray[j].getX()), 2) + pow((pointArray[i].getY() - pointArray[j].getY()), 2));
+        if(distance < minDistance){
+	  minDistance = distance;
+	  pointOnePosition = i;
+	  pointTwoPosition = j;
+        }
+      }
+    }
+  }
+  tempArray[0] = minDistance;
+  tempArray[1] = (float)pointOnePosition;
+  tempArray[2] = (float)pointTwoPosition;
+}
+
+
+int main(){
+  int numPoints = 0;
+  
+  cout<<"Please enter the number of points you would like to create: ";
+  cin>>numPoints;
+
+  while(!numPoints){
+    cout<<"Sorry.  Please enter a whole number: ";
+    cin.clear();
+    cin.ignore();
+    cin>>numPoints;
+  }
+
+  Point pointArray[numPoints];
+
+  createPoints(pointArray, numPoints);
+
+  cout<<"\nHere are the "<<numPoints<<" random points that were generated:"<<endl;
+  for(int i = 0; i < numPoints; i++){
+    cout<<"Point "<<i+1<<": "<<"("<<pointArray[i].getX()<<", "<<pointArray[i].getY()<<")"<<endl;
+  }
+
+  float tempArray[3];
+  calculateDistances(pointArray, numPoints, tempArray);
+
+  cout<<"\nThe two points that are the closest to each other are: "<<"("<<pointArray[(int)tempArray[1]].getX()<<", "<<pointArray[(int)tempArray[1]].getY()<<
+    ") and ("<<pointArray[(int)tempArray[2]].getX()<<", "<<pointArray[(int)tempArray[2]].getY()<<")"<<endl;
+  
+  cout<<"The distance between these two points is: "<<tempArray[0]<<endl;
+  
+}
